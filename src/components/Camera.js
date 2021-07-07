@@ -1,12 +1,12 @@
-import React from "react";
-import { VStack, IconButton, Input } from "@chakra-ui/react";
+import { useState, useRef } from "react";
+import { VStack, IconButton, Input, HStack, Heading } from "@chakra-ui/react";
 
 import { AiFillCamera } from "react-icons/ai";
-import { useState } from "react";
+import { CloseIcon } from "@chakra-ui/icons";
 
 export default function camera() {
-  const imageInputRef = React.useRef(null);
   const [source, setSource] = useState([]);
+  const imageInputRef = useRef(null);
 
   const triggerImageInput = () => imageInputRef.current.click();
 
@@ -15,16 +15,29 @@ export default function camera() {
     const newUrl = URL.createObjectURL(file);
     setSource((prev) => [...prev, newUrl]);
   };
+
+  const handleRemove = (id) => {
+    const newList = source.filter((item) => source.indexOf(item) !== id);
+
+    setSource(newList);
+  };
+
   return (
     <VStack>
-      <h5>Capture image</h5>
-      {source && (
-        <VStack>
-          {source.map((photo, i) => {
-            return <img key={i} alt="imgCamera" src={photo} />;
-          })}
-        </VStack>
-      )}
+      <Heading>Capture image</Heading>
+      <VStack>
+        {source.map((photo, i) => {
+          return (
+            <HStack>
+              <img key={i} alt="imgCamera" src={photo} />
+              <IconButton
+                icon={<CloseIcon />}
+                onClick={() => handleRemove(i)}
+              />
+            </HStack>
+          );
+        })}
+      </VStack>
 
       <Input
         accept="image/*"

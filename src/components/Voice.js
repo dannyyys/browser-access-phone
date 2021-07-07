@@ -1,12 +1,12 @@
-import React from "react";
-import { VStack, IconButton, Input } from "@chakra-ui/react";
+import { useState, useRef } from "react";
+import { VStack, IconButton, Input, HStack, Heading } from "@chakra-ui/react";
 
 import { MdKeyboardVoice } from "react-icons/md";
-import { useState } from "react";
+import { CloseIcon } from "@chakra-ui/icons";
 
 export default function camera() {
-  const recordingInputRef = React.useRef(null);
   const [source, setSource] = useState([]);
+  const recordingInputRef = useRef(null);
 
   const triggerRecordingInput = () => recordingInputRef.current.click();
 
@@ -15,16 +15,29 @@ export default function camera() {
     const newUrl = URL.createObjectURL(file);
     setSource((prev) => [...prev, newUrl]);
   };
+
+  const handleRemove = (id) => {
+    const newList = source.filter((item) => source.indexOf(item) !== id);
+
+    setSource(newList);
+  };
+
   return (
     <VStack>
-      <h5>Record conversation</h5>
-      {source && (
-        <VStack>
-          {source.map((recording, i) => {
-            return <audio key={i} alt="imgCamera" src={recording} controls />;
-          })}
-        </VStack>
-      )}
+      <Heading>Record conversation</Heading>
+      <VStack>
+        {source.map((recording, i) => {
+          return (
+            <HStack>
+              <audio key={i} alt="imgCamera" src={recording} controls />
+              <IconButton
+                icon={<CloseIcon />}
+                onClick={() => handleRemove(i)}
+              />
+            </HStack>
+          );
+        })}
+      </VStack>
 
       <Input
         accept="audio/*"
