@@ -10,10 +10,21 @@ export default function camera() {
 
   const triggerImageInput = () => imageInputRef.current.click();
 
+  const doSomethingWithFiles = (fileList) => {
+    let file = null;
+
+    for (let i = 0; i < fileList.length; i++) {
+      if (fileList[i].type.match(/^image\//)) {
+        file = fileList[i];
+        let newUrl = URL.createObjectURL(file);
+        setSource((prev) => [...prev, newUrl]);
+      }
+    }
+  };
+
   const handleCapture = (target) => {
-    const file = target.files[0];
-    const newUrl = URL.createObjectURL(file);
-    setSource((prev) => [...prev, newUrl]);
+    const fileList = target.files;
+    doSomethingWithFiles(fileList);
   };
 
   const handleRemove = (id) => {
@@ -42,10 +53,10 @@ export default function camera() {
       <Input
         accept="image/*"
         type="file"
-        capture="environment"
         onChange={(e) => handleCapture(e.target)}
         ref={imageInputRef}
         display="none"
+        multiple
       />
 
       <IconButton icon={<AiFillCamera />} onClick={triggerImageInput} />
