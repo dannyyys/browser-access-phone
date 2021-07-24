@@ -1,5 +1,5 @@
-import { Box, Button, Center } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { Box, Button } from "@chakra-ui/react";
+import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 
 import ComponentToPrint from "../components/ComponentToPrint";
